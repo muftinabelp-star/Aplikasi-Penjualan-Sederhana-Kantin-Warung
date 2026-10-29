@@ -1,4 +1,78 @@
-   <main>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kantin Kampus</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- ================= LOGIN ================= -->
+<div id="loginPage" class="login-page">
+    <div class="login-box" id="loginBox">
+        <h1>🍔 Kantin Kampus</h1>
+        <p>Silakan login untuk masuk</p>
+
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+
+        <button onclick="login()">Login</button>
+
+        <p id="loginError"></p>
+
+        <p class="switch-form">
+            Belum punya akun?
+            <a href="#" onclick="tampilkanRegister(); return false;">Daftar di sini</a>
+        </p>
+    </div>
+
+    <!-- FORM BUAT AKUN -->
+    <div class="login-box" id="registerBox" style="display:none;">
+        <h1>📝 Buat Akun</h1>
+        <p>Daftar sebagai pembeli</p>
+
+        <input type="text" id="regUsername" placeholder="Username">
+        <input type="password" id="regPassword" placeholder="Password (minimal 4 karakter)">
+        <input type="password" id="regPassword2" placeholder="Ulangi password">
+
+        <button onclick="daftar()">Buat Akun</button>
+
+        <p id="registerError"></p>
+
+        <p class="switch-form">
+            Sudah punya akun?
+            <a href="#" onclick="tampilkanLogin(); return false;">Kembali ke login</a>
+        </p>
+    </div>
+</div>
+
+
+<!-- ================= APLIKASI ================= -->
+<div id="app" style="display:none;">
+
+    <header>
+        <h2>🍔 Kantin Kampus</h2>
+
+        <nav>
+            <button data-role="pemilik" onclick="showPage('dashboard')">Dashboard</button>
+            <button data-role="pemilik" onclick="showPage('kategori')">Kategori</button>
+            <button data-role="pemilik" onclick="showPage('produk')">Produk</button>
+            <button data-role="semua" onclick="showPage('transaksi')">Transaksi</button>
+            <button data-role="pemilik" onclick="showPage('riwayat')">Riwayat</button>
+            <button data-role="pemilik" onclick="showPage('laporan')">Laporan</button>
+            <button onclick="logout()">Logout</button>
+        </nav>
+
+        <div class="user-info">
+            Login sebagai: <b id="namaUser"></b>
+            (<span id="roleUser"></span>)
+        </div>
+    </header>
+
+
+    <main>
 
         <!-- ================= DASHBOARD ================= -->
         <section id="dashboard" class="page">
@@ -193,3 +267,115 @@
                 <tbody id="tabelRiwayat"></tbody>
             </table>
         </section>
+
+
+        <!-- ================= LAPORAN ================= -->
+        <section id="laporan" class="page" style="display:none;">
+            <h1>Rekap Penjualan</h1>
+
+            <div class="cards">
+                <div class="card">
+                    <h3>Penjualan Hari Ini</h3>
+                    <p id="laporanHari">Rp0</p>
+                </div>
+
+                <div class="card">
+                    <h3>Penjualan Bulan Ini</h3>
+                    <p id="laporanBulan">Rp0</p>
+                </div>
+
+                <div class="card">
+                    <h3>Total Pendapatan</h3>
+                    <p id="laporanTotal">Rp0</p>
+                </div>
+            </div>
+
+            <button class="btn-bahaya" onclick="resetPenjualan()">
+                Reset Data Penjualan
+            </button>
+
+            <h2>Pendapatan Per Hari</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Jumlah Transaksi</th>
+                        <th>Pendapatan</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tabelPerHari"></tbody>
+
+                <tfoot>
+                    <tr>
+                        <th colspan="2">Total Pendapatan</th>
+                        <th id="footTotalPerHari">Rp0</th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <h2>Detail Penjualan</h2>
+
+            <label for="filterLaporan">Cek per tanggal:</label>
+            <input
+                type="date"
+                id="filterLaporan"
+                onchange="tampilkanLaporan()"
+            >
+            <button onclick="resetFilterLaporan()">Tampilkan Semua</button>
+
+            <p id="ringkasanFilter"></p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>No Transaksi</th>
+                        <th>Tanggal</th>
+                        <th>Pembeli</th>
+                        <th>Produk</th>
+                        <th>Jumlah</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tabelLaporan"></tbody>
+            </table>
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- ================= DIALOG FORM (pengganti prompt/confirm) ================= -->
+<div id="formModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <div id="formIsi"></div>
+
+        <div class="struk-aksi">
+            <button id="formSimpanBtn" onclick="submitForm()">Simpan</button>
+            <button class="btn-batal" onclick="tutupForm()">Batal</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- ================= BUKTI TRANSAKSI ================= -->
+<div id="strukModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <div id="strukIsi"></div>
+
+        <div class="struk-aksi">
+            <button onclick="cetakStruk()">Cetak</button>
+            <button onclick="tutupStruk()">Tutup</button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
