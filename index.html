@@ -1,49 +1,195 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kantin Kampus</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+   <main>
 
-<body>
+        <!-- ================= DASHBOARD ================= -->
+        <section id="dashboard" class="page">
+            <h1>Dashboard</h1>
 
-<!-- ================= LOGIN ================= -->
-<div id="loginPage" class="login-page">
-    <div class="login-box" id="loginBox">
-        <h1>🍔 Kantin Kampus</h1>
-        <p>Silakan login untuk masuk</p>
+            <div class="cards">
+                <div class="card">
+                    <h3>Total Produk</h3>
+                    <p id="totalProduk">0</p>
+                </div>
 
-        <input type="text" id="username" placeholder="Username">
-        <input type="password" id="password" placeholder="Password">
+                <div class="card">
+                    <h3>Total Kategori</h3>
+                    <p id="totalKategori">0</p>
+                </div>
 
-        <button onclick="login()">Login</button>
+                <div class="card">
+                    <h3>Total Transaksi</h3>
+                    <p id="totalTransaksi">0</p>
+                </div>
 
-        <p id="loginError"></p>
+                <div class="card">
+                    <h3>Pendapatan</h3>
+                    <p id="totalPendapatan">Rp0</p>
+                </div>
+            </div>
+        </section>
 
-        <p class="switch-form">
-            Belum punya akun?
-            <a href="#" onclick="tampilkanRegister(); return false;">Daftar di sini</a>
-        </p>
-    </div>
 
-    <!-- FORM BUAT AKUN -->
-    <div class="login-box" id="registerBox" style="display:none;">
-        <h1>📝 Buat Akun</h1>
-        <p>Daftar sebagai pembeli</p>
+        <!-- ================= KATEGORI ================= -->
+        <section id="kategori" class="page" style="display:none;">
+            <h1>Kelola Kategori</h1>
 
-        <input type="text" id="regUsername" placeholder="Username">
-        <input type="password" id="regPassword" placeholder="Password (minimal 4 karakter)">
-        <input type="password" id="regPassword2" placeholder="Ulangi password">
+            <input type="text" id="namaKategori" placeholder="Nama kategori">
+            <button onclick="tambahKategori()">Tambah Kategori</button>
 
-        <button onclick="daftar()">Buat Akun</button>
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Kategori</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
 
-        <p id="registerError"></p>
+                <tbody id="tabelKategori"></tbody>
+            </table>
+        </section>
 
-        <p class="switch-form">
-            Sudah punya akun?
-            <a href="#" onclick="tampilkanLogin(); return false;">Kembali ke login</a>
-        </p>
-    </div>
-</div>
+
+        <!-- ================= PRODUK ================= -->
+        <section id="produk" class="page" style="display:none;">
+            <h1>Kelola Produk</h1>
+
+            <input type="text" id="kodeProduk" placeholder="Kode produk">
+            <input type="text" id="namaProduk" placeholder="Nama produk">
+
+            <select id="kategoriProduk"></select>
+
+            <input type="number" id="hargaProduk" placeholder="Harga">
+            <input type="number" id="stokProduk" placeholder="Stok">
+
+            <label class="form-label" for="gambarProduk">Foto menu (opsional):</label>
+            <input type="file" id="gambarProduk" accept="image/*">
+
+            <br>
+
+            <button onclick="tambahProduk()">Tambah Produk</button>
+
+            <br><br>
+
+            <input
+                type="text"
+                id="cariProduk"
+                placeholder="Cari kode/nama/kategori..."
+                onkeyup="tampilkanProduk()"
+            >
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Foto</th>
+                        <th>Kode</th>
+                        <th>Nama</th>
+                        <th>Kategori</th>
+                        <th>Harga</th>
+                        <th>Stok</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tabelProduk"></tbody>
+            </table>
+        </section>
+
+
+        <!-- ================= TRANSAKSI ================= -->
+        <section id="transaksi" class="page" style="display:none;">
+            <h1>Transaksi Penjualan</h1>
+
+            <h3>Pilih Produk</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Foto</th>
+                        <th>Kode</th>
+                        <th>Produk</th>
+                        <th>Harga</th>
+                        <th>Stok</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tabelTransaksiProduk"></tbody>
+            </table>
+
+            <h2>Keranjang</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produk</th>
+                        <th>Harga</th>
+                        <th>Qty</th>
+                        <th>Subtotal</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tabelKeranjang"></tbody>
+            </table>
+
+            <h2>
+                Total:
+                <span id="totalKeranjang">Rp0</span>
+            </h2>
+
+            <!-- PEMBAYARAN -->
+            <div class="payment-box">
+
+                <h3>Pembayaran</h3>
+
+                <p>
+                    Total Bayar:
+                    <span id="totalBayar">Rp0</span>
+                </p>
+
+                <input
+                    type="number"
+                    id="uangBayar"
+                    placeholder="Masukkan uang pembayaran"
+                >
+
+                <button onclick="prosesPembayaran()">
+                    Bayar &amp; Cetak Bukti
+                </button>
+
+                <p id="hasilBayar"></p>
+            </div>
+        </section>
+
+
+        <!-- ================= RIWAYAT ================= -->
+        <section id="riwayat" class="page" style="display:none;">
+            <h1>Riwayat Transaksi</h1>
+
+            <input
+                type="text"
+                id="cariTransaksi"
+                placeholder="Cari nomor transaksi..."
+                onkeyup="tampilkanRiwayat()"
+            >
+
+            <input
+                type="date"
+                id="tanggalTransaksi"
+                onchange="tampilkanRiwayat()"
+            >
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>No Transaksi</th>
+                        <th>Tanggal</th>
+                        <th>Pembeli</th>
+                        <th>Total</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tabelRiwayat"></tbody>
+            </table>
+        </section>
